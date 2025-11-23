@@ -1,9 +1,18 @@
 from django.contrib import admin
-from .models import CustomUser  # Import your custom user model
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Book
 
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'date_of_birth', 'profile_photo')  # Customize the fields to display
-    search_fields = ('username', 'email')  # Enable search functionality
-    list_filter = ('date_of_birth',)  # Add filters for the admin interface
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional', {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    list_display = ('username', 'email', 'is_staff', 'date_of_birth')
 
-admin.site.register(CustomUser, CustomUserAdmin)  # Register the custom user model with the admin site
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'owner', 'created_at')
+    search_fields = ('title', 'author')

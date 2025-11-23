@@ -1,12 +1,11 @@
 from django import forms
-from .models import YourModelName  # Replace with your actual model name
+from .models import Book  # Replace with your actual model name
 
-class YourModelForm(forms.ModelForm):
+class BookForm(forms.ModelForm):
     class Meta:
-        model = YourModelName  # Replace with your actual model name
-        fields = ['field1', 'field2', 'field3']  # Replace with your actual fields
+        model = Book  # Replace with your actual model name
+        fields = ['title', 'author']  # Replace with your actual fields
         widgets = {
-            'field1': forms.TextInput(attrs={'class': 'form-control'}),
-            'field2': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'field3': forms.FileInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'author': forms.Select(attrs={'class': 'form-control'}),
         }
