@@ -5,6 +5,7 @@ from rest_framework.exceptions import NotFound
 from .models import Book
 from .serializers import BookSerializer
 
+
 # -------------------------------------------------
 # Book List View – GET /api/books/
 # Anyone can view list (read-only).
@@ -13,6 +14,16 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+class BookListView(generics.ListAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # Filtering, Searching, Ordering
+    filterset_fields = ['title', 'publication_year', 'author__name']
+    search_fields = ['title', 'author__name']
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title']  # default ordering
 
 
 # -------------------------------------------------
