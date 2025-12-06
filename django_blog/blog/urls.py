@@ -9,7 +9,7 @@ urlpatterns = [
     path("profile/", views.profile_view, name="profile"),
     path("profile/update/", views.profile_update_view, name="profile_update"),
 
-    # Post CRUD
+ # Post CRUD
     path("posts/", views.PostListView.as_view(), name="post-list"),
     path("post/new/", views.PostCreateView.as_view(), name="post-create"),
     path("post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
@@ -25,3 +25,5 @@ urlpatterns = [
     path("tags/<str:tag_name>/", views.posts_by_tag, name="posts-by-tag"),
     path("search/", views.search_posts, name="search-posts"),
 ]
+
+   

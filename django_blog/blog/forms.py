@@ -23,11 +23,16 @@ class CommentForm(forms.ModelForm):
         return content
 
 # Post form with tags
+
 class PostForm(forms.ModelForm):
     tags = forms.CharField(
         required=False,
         help_text="Enter comma-separated tags (e.g., python, django, webdev)"
     )
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "content", "tags"]  # taggit handles tags automatically
 
     class Meta:
         model = Post

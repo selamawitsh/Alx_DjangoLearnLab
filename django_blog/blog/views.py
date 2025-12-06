@@ -9,6 +9,8 @@ from django.db.models import Q
 
 from .forms import RegisterForm, CommentForm, PostForm
 from .models import Post, Comment, Tag
+# blog/views.py
+from taggit.models import Tag
 
 # ----------------- Auth Views -----------------
 def register_view(request):
@@ -131,22 +133,34 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         return self.request.user == self.get_object().author
 
-# ----------------- Tag and Search Views -----------------
+
+
 def posts_by_tag(request, tag_name):
     tag = Tag.objects.filter(name=tag_name).first()
-    posts = tag.posts.all().order_by("-published_date") if tag else []
-    return render(request, "blog/posts_by_tag.html", {"tag": tag_name, "posts": posts})
+    posts = tag.posts.all() if tag else []
+
+    return render(request, "blog/posts_by_tag.html", {
+        "tag": tag_name,
+        "posts": posts
+    })
+
+
+# blog/views.py
+from django.db.models import Q
 
 def search_posts(request):
     query = request.GET.get("q", "")
-    posts = []
+    posts = Post.objects.none()
+
     if query:
         posts = Post.objects.filter(
             Q(title__icontains=query) |
             Q(content__icontains=query) |
-            Q(tags__name__icontains=query)
+            Q(tags__name__icontains=query)  # tag search
         ).distinct()
+
     return render(request, "blog/search_results.html", {"query": query, "posts": posts})
+
 
 
 
