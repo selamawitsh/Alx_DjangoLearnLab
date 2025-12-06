@@ -12,3 +12,31 @@
 
 <a href="{% url 'post-list' %}">⬅ Back to All Posts</a>
 {% endblock %}
+
+<h3>Comments</h3>
+
+{% for comment in post.comments.all %}
+    <div style="margin-bottom: 10px;">
+        <strong>{{ comment.author.username }}</strong>  
+        <small>{{ comment.created_at }}</small>
+        <p>{{ comment.content }}</p>
+
+        {% if user == comment.author %}
+            <a href="{% url 'edit_comment' comment.id %}">Edit</a> |
+            <a href="{% url 'delete_comment' comment.id %}">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <h4>Add a comment</h4>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p>You must <a href="{% url 'login' %}">login</a> to comment.</p>
+{% endif %}
