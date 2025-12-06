@@ -150,3 +150,20 @@ def search_posts(request):
             Q(tags__name__icontains=query)
         ).distinct()
     return render(request, "blog/search_results.html", {"query": query, "posts": posts})
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = "blog/posts_by_tag.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        self.tag = self.kwargs.get("tag_slug")
+        tag = Tag.objects.filter(name=self.tag).first()
+        if tag:
+            return tag.posts.all().order_by("-published_date")
+        return Post.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag"] = self.tag
+        return context
