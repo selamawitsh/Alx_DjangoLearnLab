@@ -1,3 +1,4 @@
+# blog/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -11,10 +12,7 @@ from .forms import RegisterForm, CommentForm
 from .models import Post, Comment
 
 
-# -------------------------
-# USER AUTH VIEWS
-# -------------------------
-
+# --- Auth views (unchanged) ---
 def register_view(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -24,7 +22,6 @@ def register_view(request):
             return redirect("login")
     else:
         form = RegisterForm()
-
     return render(request, "blog/register.html", {"form": form})
 
 
@@ -32,14 +29,12 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
             return redirect("profile")
         else:
             messages.error(request, "Invalid username or password")
-
     return render(request, "blog/login.html")
 
 
@@ -61,14 +56,10 @@ def profile_update_view(request):
         user.save()
         messages.success(request, "Profile updated successfully!")
         return redirect("profile")
-
     return render(request, "blog/profile_update.html")
 
 
-# -------------------------
-# POST CRUD VIEWS
-# -------------------------
-
+# --- Post CRUD ---
 class PostListView(ListView):
     model = Post
     template_name = "blog/post_list.html"
@@ -113,10 +104,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == self.get_object().author
 
 
-# -------------------------
-# COMMENT CRUD (Class-Based)
-# -------------------------
-
+# --- Comment CRUD (class-based) ---
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm

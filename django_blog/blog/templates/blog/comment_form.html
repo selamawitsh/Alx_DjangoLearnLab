@@ -8,5 +8,5 @@
     <button type="submit">{% if object %}Save changes{% else %}Post comment{% endif %}</button>
   </form>
 
-  <a href="{% if object %}{{ object.post.get_absolute_url }}{% else %}{{ view.post.get_absolute_url }}{% endif %}">Back to post</a>
+  <a href="{% url 'post-detail' pk=object.post.pk %}">Back to post</a>
 {% endblock %}
