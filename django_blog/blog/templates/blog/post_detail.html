@@ -1,40 +1,48 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-  <article>
+<article>
     <h2>{{ object.title }}</h2>
     <p>{{ object.content }}</p>
     <p><small>By {{ object.author }} on {{ object.published_date }}</small></p>
 
     {% if user == object.author %}
-      <p>
+    <p>
         <a href="{% url 'post-update' pk=object.pk %}">Edit</a> |
         <a href="{% url 'post-delete' pk=object.pk %}">Delete</a>
-      </p>
+    </p>
     {% endif %}
-  </article>
 
-  <section id="comments">
+    <p><strong>Tags:</strong>
+    {% for tag in object.tags.all %}
+        <a href="{% url 'posts-by-tag' tag.name %}">#{{ tag.name }}</a>
+    {% empty %}
+        No tags
+    {% endfor %}
+    </p>
+</article>
+
+<section id="comments">
     <h3>Comments</h3>
     {% for comment in object.comments.all %}
-      <div>
-        <strong>{{ comment.author.username }}</strong>
-        <small>{{ comment.created_at }}</small>
-        <p>{{ comment.content }}</p>
-        {% if user == comment.author %}
-          <a href="{% url 'comment-update' pk=comment.pk %}">Edit</a> |
-          <a href="{% url 'comment-delete' pk=comment.pk %}">Delete</a>
-        {% endif %}
-      </div>
+        <div>
+            <strong>{{ comment.author.username }}</strong>
+            <small>{{ comment.created_at }}</small>
+            <p>{{ comment.content }}</p>
+            {% if user == comment.author %}
+            <a href="{% url 'comment-update' pk=comment.pk %}">Edit</a> |
+            <a href="{% url 'comment-delete' pk=comment.pk %}">Delete</a>
+            {% endif %}
+        </div>
     {% empty %}
-      <p>No comments yet.</p>
+        <p>No comments yet.</p>
     {% endfor %}
 
     {% if user.is_authenticated %}
-      <p><a href="{% url 'comment-create' post_id=object.pk %}">Add a comment</a></p>
+        <p><a href="{% url 'comment-create' post_id=object.pk %}">Add a comment</a></p>
     {% else %}
-      <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+        <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
     {% endif %}
-  </section>
+</section>
 
-  <p><a href="{% url 'post-list' %}">Back to posts</a></p>
+<p><a href="{% url 'post-list' %}">Back to posts</a></p>
 {% endblock %}

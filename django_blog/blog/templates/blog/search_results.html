@@ -1,0 +1,11 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<h2>Search results for "{{ query }}"</h2>
+
+{% for post in posts %}
+    <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
+    <p>{{ post.content|truncatechars:150 }}</p>
+{% empty %}
+    <p>No posts found.</p>
+{% endfor %}
+{% endblock %}

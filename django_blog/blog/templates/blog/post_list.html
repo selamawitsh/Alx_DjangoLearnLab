@@ -1,18 +1,23 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-  <h2>All Blog Posts</h2>
-  {% for post in posts %}
-    <article>
-      <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
-      <p>{{ post.content|truncatechars:150 }}</p>
-      <p><small>By {{ post.author }} on {{ post.published_date }}</small></p>
-    </article>
-    <hr>
-  {% empty %}
-    <p>No posts yet.</p>
-  {% endfor %}
+<form method="get" action="{% url 'search-posts' %}">
+    <input type="text" name="q" placeholder="Search posts..." />
+    <button type="submit">Search</button>
+</form>
 
-  {% if user.is_authenticated %}
-    <a href="{% url 'post-create' %}">Create new post</a>
-  {% endif %}
+<h2>All Blog Posts</h2>
+{% for post in posts %}
+<article>
+    <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
+    <p>{{ post.content|truncatechars:150 }}</p>
+    <p><small>By {{ post.author }} on {{ post.published_date }}</small></p>
+</article>
+<hr>
+{% empty %}
+<p>No posts yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'post-create' %}">Create new post</a>
+{% endif %}
 {% endblock %}
